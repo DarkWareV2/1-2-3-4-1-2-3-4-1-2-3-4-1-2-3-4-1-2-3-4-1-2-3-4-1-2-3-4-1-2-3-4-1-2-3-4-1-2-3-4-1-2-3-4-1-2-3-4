@@ -25,4 +25,44 @@ local Window = Rayfield:CreateWindow({
 		Key = "https://pastebin.com/raw/57uXpGyv"
 	}
 })
+
+local LocalPlayerTab = Window:CreateTab("Local Player", 4483362458)
+local Section = LocalPlayerTab:CreateSection("Humanoid")
+
+local Slider = LocalPlayerTab:CreateSlider({
+	Name = "WalkSpeed",
+	Range = {0, 500},
+	Increment = 1,
+	Suffix = "WalkSpeed",
+	CurrentValue = 16,
+	Flag = "Slider1",
+	Callback = function(Value)
+		local player = game.Players.LocalPlayer
+		local character = player and player.Character
+		local humanoid = character and character:FindFirstChild("Humanoid")
+		
+		if humanoid then
+			humanoid.WalkSpeed = Value
+		end
+	end,
+})
+
+local JumpHeightSlider = LocalPlayerTab:CreateSlider({
+	Name = "JumpHeight",
+	Range = {0, 200},
+	Increment = 1,
+	Suffix = "Studs",
+	CurrentValue = 50,
+	Flag = "Slider2",
+	Callback = function(Value)
+		local player = game.Players.LocalPlayer
+		local character = player and player.Character
+		local humanoid = character and character:FindFirstChild("Humanoid")
+		
+		if humanoid then
+			humanoid.JumpPower = Value
+		end
+	end,
+})
+
 Rayfield:LoadConfiguration()
