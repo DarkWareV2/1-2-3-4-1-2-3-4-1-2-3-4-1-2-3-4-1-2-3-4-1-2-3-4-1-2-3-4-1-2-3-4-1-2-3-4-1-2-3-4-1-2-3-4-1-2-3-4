@@ -114,7 +114,7 @@ local function stopFlying()
 end
 
 local Toggle = LocalPlayerTab:CreateToggle({
-	Name = "Cframe Fly",
+	Name = "Fly",
 	CurrentValue = false,
 	Flag = "Toggle1",
 	Callback = function(Value)
