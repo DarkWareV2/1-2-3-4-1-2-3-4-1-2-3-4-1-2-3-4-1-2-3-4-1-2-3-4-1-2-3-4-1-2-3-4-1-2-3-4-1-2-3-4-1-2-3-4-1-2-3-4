@@ -67,67 +67,65 @@ local JumpHeightSlider = LocalPlayerTab:CreateSlider({
 
 local Section = LocalPlayerTab:CreateSection("Cframe")
 
+local uis = game:GetService("UserInputService")
+local rs = game:GetService("RunService")
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local camera = workspace.CurrentCamera
+
 local flying = false
-local speed = 2  
-local bodyVelocity
-local bodyGyro
+local speed = 0.5
+local bp, bg
+
+local function startFlying()
+	flying = true
+
+	bp = Instance.new("BodyPosition")
+	bp.MaxForce = Vector3.new(400000, 400000, 400000)
+	bp.D = 10
+	bp.P = 10000
+	bp.Parent = humanoidRootPart
+
+	bg = Instance.new("BodyGyro")
+	bg.MaxTorque = Vector3.new(400000, 400000, 400000)
+	bg.D = 10
+	bg.Parent = humanoidRootPart
+
+	rs.RenderStepped:Connect(function()
+		if flying then
+			bp.Position = humanoidRootPart.Position + ((humanoidRootPart.Position - camera.CFrame.p).unit * speed)
+			bg.CFrame = CFrame.new(camera.CFrame.p, humanoidRootPart.Position)
+		end
+	end)
+end
+
+local function stopFlying()
+	if bp then
+		bp:Destroy()
+		bp = nil
+	end
+	if bg then
+		bg:Destroy()
+		bg = nil
+	end
+	flying = false
+end
 
 local Toggle = LocalPlayerTab:CreateToggle({
 	Name = "Cframe Fly",
 	CurrentValue = false,
 	Flag = "Toggle1",
 	Callback = function(Value)
-		local player = game.Players.LocalPlayer
-		local character = player.Character or player.CharacterAdded:Wait()
-		local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
 		if Value then
-			flying = true
-
-			bodyVelocity = Instance.new("BodyVelocity")
-			bodyVelocity.Velocity = Vector3.new(0, 0, 0)
-			bodyVelocity.MaxForce = Vector3.new(4000, 4000, 4000)
-			bodyVelocity.Parent = humanoidRootPart
-
-			bodyGyro = Instance.new("BodyGyro")
-			bodyGyro.CFrame = humanoidRootPart.CFrame
-			bodyGyro.MaxTorque = Vector3.new(4000, 4000, 4000)
-			bodyGyro.P = 10000
-			bodyGyro.Parent = humanoidRootPart
-
-			humanoidRootPart.Anchored = false
-
-			while flying do
-				local moveDirection = Vector3.new(0, 0, 0)
-				local camera = workspace.CurrentCamera
-				local lookVector = camera.CFrame.LookVector
-
-				if player:FindFirstChild("Humanoid") then
-					local humanoid = player.Humanoid
-					if humanoid.MoveDirection.magnitude > 0 then
-						moveDirection = (lookVector * humanoid.MoveDirection.z + camera.CFrame.RightVector * humanoid.MoveDirection.x).unit
-					end
-				end
-				
-				bodyVelocity.Velocity = moveDirection * speed
-				bodyGyro.CFrame = camera.CFrame
-				
-				wait(0.1)
+			if not flying then
+				startFlying()
 			end
 		else
-			flying = false
-
-			if bodyVelocity then
-				bodyVelocity:Destroy()
-				bodyVelocity = nil
+			if flying then
+				stopFlying()
 			end
-
-			if bodyGyro then
-				bodyGyro:Destroy()
-				bodyGyro = nil
-			end
-			
-			humanoidRootPart.Anchored = false
 		end
 	end,
 })
