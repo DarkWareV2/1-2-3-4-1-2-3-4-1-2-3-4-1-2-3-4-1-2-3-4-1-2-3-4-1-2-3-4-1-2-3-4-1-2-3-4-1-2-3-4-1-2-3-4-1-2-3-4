@@ -29,23 +29,7 @@ local Window = Rayfield:CreateWindow({
 local LocalPlayerTab = Window:CreateTab("Local Player", 4483362458)
 local Section = LocalPlayerTab:CreateSection("Humanoid")
 
-local Slider = LocalPlayerTab:CreateSlider({
-	Name = "WalkSpeed",
-	Range = {16, 500},
-	Increment = 1,
-	Suffix = "WalkSpeed",
-	CurrentValue = 16,
-	Flag = "Slider1",
-	Callback = function(Value)
-		local player = game.Players.LocalPlayer
-		local character = player and player.Character
-		local humanoid = character and character:FindFirstChild("Humanoid")
-		
-		if humanoid then
-			humanoid.WalkSpeed = Value
-		end
-	end,
-})
+
 
 local JumpHeightSlider = LocalPlayerTab:CreateSlider({
 	Name = "JumpHeight",
@@ -65,69 +49,94 @@ local JumpHeightSlider = LocalPlayerTab:CreateSlider({
 	end,
 })
 
-local Section = LocalPlayerTab:CreateSection("Cframe")
-
 local uis = game:GetService("UserInputService")
 local rs = game:GetService("RunService")
+local players = game:GetService("Players")
 
-local player = game.Players.LocalPlayer
+local player = players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 local camera = workspace.CurrentCamera
+local humanoid = character:WaitForChild("Humanoid")
 
 local flying = false
-local speed = 0.5
+local speed = 0.5  -- Initial flying speed
 local bp, bg
+local walkSpeedValue = 16  -- Default WalkSpeed value
+local walkSpeedSlider = LocalPlayerTab:CreateSlider({
+    Name = "WalkSpeed",
+    Min = 16,
+    Max = 500,
+    CurrentValue = walkSpeedValue,
+    Flag = "WalkSpeedSlider",
+    Callback = function(Value)
+        walkSpeedValue = Value
+    end,
+})
 
 local function startFlying()
-	flying = true
+    flying = true
 
-	bp = Instance.new("BodyPosition")
-	bp.MaxForce = Vector3.new(400000, 400000, 400000)
-	bp.D = 10
-	bp.P = 10000
-	bp.Parent = humanoidRootPart
+    bp = Instance.new("BodyPosition")
+    bp.MaxForce = Vector3.new(400000, 400000, 400000)
+    bp.D = 10
+    bp.P = 10000
+    bp.Parent = humanoidRootPart
 
-	bg = Instance.new("BodyGyro")
-	bg.MaxTorque = Vector3.new(400000, 400000, 400000)
-	bg.D = 10
-	bg.Parent = humanoidRootPart
+    bg = Instance.new("BodyGyro")
+    bg.MaxTorque = Vector3.new(400000, 400000, 400000)
+    bg.D = 10
+    bg.Parent = humanoidRootPart
 
-	rs.RenderStepped:Connect(function()
-		if flying then
-			bp.Position = humanoidRootPart.Position + ((humanoidRootPart.Position - camera.CFrame.p).unit * speed)
-			bg.CFrame = CFrame.new(camera.CFrame.p, humanoidRootPart.Position)
-		end
-	end)
+    rs.RenderStepped:Connect(function()
+        if flying then
+            -- Update flying position based on camera
+            bp.Position = humanoidRootPart.Position + ((humanoidRootPart.Position - camera.CFrame.p).unit * speed)
+            bg.CFrame = CFrame.new(camera.CFrame.p, humanoidRootPart.Position)
+        end
+    end)
 end
 
 local function stopFlying()
-	if bp then
-		bp:Destroy()
-		bp = nil
-	end
-	if bg then
-		bg:Destroy()
-		bg = nil
-	end
-	flying = false
+    if bp then
+        bp:Destroy()
+        bp = nil
+    end
+    if bg then
+        bg:Destroy()
+        bg = nil
+    end
+    flying = false
 end
 
 local Toggle = LocalPlayerTab:CreateToggle({
-	Name = "Cframe Fly",
-	CurrentValue = false,
-	Flag = "Toggle1",
-	Callback = function(Value)
-		if Value then
-			if not flying then
-				startFlying()
-			end
-		else
-			if flying then
-				stopFlying()
-			end
-		end
-	end,
+    Name = "Fly",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(Value)
+        if Value then
+            if not flying then
+                startFlying()
+            end
+        else
+            if flying then
+                stopFlying()
+            end
+        end
+    end,
 })
+
+-- Continuously update WalkSpeed if the player is flying
+local function updateWalkSpeed()
+    while true do
+        if not flying then
+            humanoid.WalkSpeed = walkSpeedValue
+        end
+        wait(0.01)
+    end
+end
+
+-- Start the loop to continuously update WalkSpeed
+coroutine.wrap(updateWalkSpeed)()
 
 Rayfield:LoadConfiguration()
