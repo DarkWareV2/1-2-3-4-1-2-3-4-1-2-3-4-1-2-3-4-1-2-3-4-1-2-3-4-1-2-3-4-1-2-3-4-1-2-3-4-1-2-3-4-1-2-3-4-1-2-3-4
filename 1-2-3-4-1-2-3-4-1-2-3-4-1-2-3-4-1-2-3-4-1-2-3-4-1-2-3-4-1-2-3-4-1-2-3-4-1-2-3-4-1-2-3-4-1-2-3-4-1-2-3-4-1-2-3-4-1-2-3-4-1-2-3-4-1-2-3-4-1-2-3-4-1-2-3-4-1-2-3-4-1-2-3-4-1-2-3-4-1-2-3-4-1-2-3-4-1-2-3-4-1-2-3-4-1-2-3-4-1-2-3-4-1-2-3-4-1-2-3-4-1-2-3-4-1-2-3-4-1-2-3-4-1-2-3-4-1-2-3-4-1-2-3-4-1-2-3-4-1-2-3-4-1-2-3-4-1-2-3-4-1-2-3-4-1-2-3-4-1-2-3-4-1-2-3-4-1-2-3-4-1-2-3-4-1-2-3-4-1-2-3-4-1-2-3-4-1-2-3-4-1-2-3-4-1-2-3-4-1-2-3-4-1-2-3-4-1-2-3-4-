@@ -65,4 +65,66 @@ local JumpHeightSlider = LocalPlayerTab:CreateSlider({
 	end,
 })
 
+local Section = LocalPlayerTab:CreateSection("Cframe")
+
+local flying = false
+local speed = 2
+local bodyVelocity
+local bodyGyro
+
+local Toggle = LocalPlayerTab:CreateToggle({
+	Name = "Cframe Fly",
+	CurrentValue = false,
+	Flag = "Toggle1",
+	Callback = function(Value)
+		local player = game.Players.LocalPlayer
+		local character = player.Character or player.CharacterAdded:Wait()
+		local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+		
+		if Value then
+			flying = true
+
+			bodyVelocity = Instance.new("BodyVelocity")
+			bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+			bodyVelocity.MaxForce = Vector3.new(4000, 4000, 4000)
+			bodyVelocity.Parent = humanoidRootPart
+
+			bodyGyro = Instance.new("BodyGyro")
+			bodyGyro.CFrame = humanoidRootPart.CFrame
+			bodyGyro.MaxTorque = Vector3.new(4000, 4000, 4000)
+			bodyGyro.P = 10000
+			bodyGyro.Parent = humanoidRootPart
+
+			while flying do
+				local moveDirection = Vector3.new(0, 0, 0)
+				local camera = workspace.CurrentCamera
+				local lookVector = camera.CFrame.LookVector
+
+				if player:FindFirstChild("Humanoid") then
+					local humanoid = player.Humanoid
+					if humanoid.MoveDirection.magnitude > 0 then
+						moveDirection = (lookVector * humanoid.MoveDirection.z + camera.CFrame.RightVector * humanoid.MoveDirection.x).unit
+					end
+				end
+				
+				bodyVelocity.Velocity = moveDirection * speed
+				bodyGyro.CFrame = camera.CFrame
+				
+				wait(0.1)
+			end
+		else
+			flying = false
+
+			if bodyVelocity then
+				bodyVelocity:Destroy()
+				bodyVelocity = nil
+			end
+
+			if bodyGyro then
+				bodyGyro:Destroy()
+				bodyGyro = nil
+			end
+		end
+	end,
+})
 Rayfield:LoadConfiguration()
