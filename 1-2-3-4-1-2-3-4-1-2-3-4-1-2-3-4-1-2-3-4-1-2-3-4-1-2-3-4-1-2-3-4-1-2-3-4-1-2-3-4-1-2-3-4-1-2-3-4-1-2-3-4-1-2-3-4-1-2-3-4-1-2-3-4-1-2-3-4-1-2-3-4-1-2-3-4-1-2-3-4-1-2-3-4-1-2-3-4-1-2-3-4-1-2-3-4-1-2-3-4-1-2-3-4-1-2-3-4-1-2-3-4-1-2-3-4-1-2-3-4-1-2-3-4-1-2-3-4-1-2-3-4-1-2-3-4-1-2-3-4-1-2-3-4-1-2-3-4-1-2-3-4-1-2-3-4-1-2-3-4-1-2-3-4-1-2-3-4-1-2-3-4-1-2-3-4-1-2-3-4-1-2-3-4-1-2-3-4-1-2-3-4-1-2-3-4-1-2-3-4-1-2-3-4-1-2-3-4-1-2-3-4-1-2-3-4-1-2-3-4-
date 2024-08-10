@@ -31,7 +31,7 @@ local Section = LocalPlayerTab:CreateSection("Humanoid")
 
 local Slider = LocalPlayerTab:CreateSlider({
 	Name = "WalkSpeed",
-	Range = {0, 500},
+	Range = {16, 500},
 	Increment = 1,
 	Suffix = "WalkSpeed",
 	CurrentValue = 16,
@@ -49,7 +49,7 @@ local Slider = LocalPlayerTab:CreateSlider({
 
 local JumpHeightSlider = LocalPlayerTab:CreateSlider({
 	Name = "JumpHeight",
-	Range = {0, 200},
+	Range = {50, 200},
 	Increment = 1,
 	Suffix = "Studs",
 	CurrentValue = 50,
@@ -114,7 +114,7 @@ local function stopFlying()
 end
 
 local Toggle = LocalPlayerTab:CreateToggle({
-	Name = "Fly",
+	Name = "Cframe Fly",
 	CurrentValue = false,
 	Flag = "Toggle1",
 	Callback = function(Value)
