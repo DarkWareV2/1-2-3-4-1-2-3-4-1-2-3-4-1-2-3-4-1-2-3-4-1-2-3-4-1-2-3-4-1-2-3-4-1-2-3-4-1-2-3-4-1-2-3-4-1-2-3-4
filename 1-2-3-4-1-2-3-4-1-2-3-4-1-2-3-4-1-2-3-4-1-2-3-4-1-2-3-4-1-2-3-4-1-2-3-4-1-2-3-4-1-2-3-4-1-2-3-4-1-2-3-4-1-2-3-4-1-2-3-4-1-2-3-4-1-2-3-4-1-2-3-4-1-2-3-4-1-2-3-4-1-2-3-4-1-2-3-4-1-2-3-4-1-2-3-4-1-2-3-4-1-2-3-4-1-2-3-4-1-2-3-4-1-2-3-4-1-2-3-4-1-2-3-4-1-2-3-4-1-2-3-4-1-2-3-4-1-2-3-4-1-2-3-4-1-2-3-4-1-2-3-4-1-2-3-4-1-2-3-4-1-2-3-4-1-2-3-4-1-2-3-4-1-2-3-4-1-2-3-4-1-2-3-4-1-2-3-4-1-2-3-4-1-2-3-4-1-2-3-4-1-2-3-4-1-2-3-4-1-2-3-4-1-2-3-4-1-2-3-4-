@@ -68,7 +68,7 @@ local JumpHeightSlider = LocalPlayerTab:CreateSlider({
 local Section = LocalPlayerTab:CreateSection("Cframe")
 
 local flying = false
-local speed = 2
+local speed = 2  
 local bodyVelocity
 local bodyGyro
 
@@ -80,7 +80,7 @@ local Toggle = LocalPlayerTab:CreateToggle({
 		local player = game.Players.LocalPlayer
 		local character = player.Character or player.CharacterAdded:Wait()
 		local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-		
+
 		if Value then
 			flying = true
 
@@ -94,6 +94,8 @@ local Toggle = LocalPlayerTab:CreateToggle({
 			bodyGyro.MaxTorque = Vector3.new(4000, 4000, 4000)
 			bodyGyro.P = 10000
 			bodyGyro.Parent = humanoidRootPart
+
+			humanoidRootPart.Anchored = false
 
 			while flying do
 				local moveDirection = Vector3.new(0, 0, 0)
@@ -124,7 +126,10 @@ local Toggle = LocalPlayerTab:CreateToggle({
 				bodyGyro:Destroy()
 				bodyGyro = nil
 			end
+			
+			humanoidRootPart.Anchored = false
 		end
 	end,
 })
+
 Rayfield:LoadConfiguration()
