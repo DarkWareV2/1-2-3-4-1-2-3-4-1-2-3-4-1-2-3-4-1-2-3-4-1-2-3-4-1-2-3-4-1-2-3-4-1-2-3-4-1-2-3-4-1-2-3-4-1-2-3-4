@@ -260,9 +260,12 @@ local Section = AimTab:CreateSection("Aimbot")
 
 local player = game.Players.LocalPlayer
 local camera = workspace.CurrentCamera
+local UserInputService = game:GetService("UserInputService")
 
+-- Variable to track the aim lock status
 local aimLockActive = false
 
+-- Function to get the nearest player
 local function getNearestPlayer()
     local closestPlayer = nil
     local closestDistance = math.huge
@@ -289,8 +292,25 @@ local Toggle = AimTab:CreateToggle({
     end,
 })
 
+local function onInputBegan(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton2 or (input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.E) then
+        if aimLockActive then
+            aimLockActive = true
+        end
+    end
+end
+
+local function onInputEnded(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton2 or (input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.E) then
+        aimLockActive = false
+    end
+end
+
+UserInputService.InputBegan:Connect(onInputBegan)
+UserInputService.InputEnded:Connect(onInputEnded)
+
 while true do
-    wait(0.01)
+    wait(0.1) 
 
     if aimLockActive then
         local nearestPlayer = getNearestPlayer()
