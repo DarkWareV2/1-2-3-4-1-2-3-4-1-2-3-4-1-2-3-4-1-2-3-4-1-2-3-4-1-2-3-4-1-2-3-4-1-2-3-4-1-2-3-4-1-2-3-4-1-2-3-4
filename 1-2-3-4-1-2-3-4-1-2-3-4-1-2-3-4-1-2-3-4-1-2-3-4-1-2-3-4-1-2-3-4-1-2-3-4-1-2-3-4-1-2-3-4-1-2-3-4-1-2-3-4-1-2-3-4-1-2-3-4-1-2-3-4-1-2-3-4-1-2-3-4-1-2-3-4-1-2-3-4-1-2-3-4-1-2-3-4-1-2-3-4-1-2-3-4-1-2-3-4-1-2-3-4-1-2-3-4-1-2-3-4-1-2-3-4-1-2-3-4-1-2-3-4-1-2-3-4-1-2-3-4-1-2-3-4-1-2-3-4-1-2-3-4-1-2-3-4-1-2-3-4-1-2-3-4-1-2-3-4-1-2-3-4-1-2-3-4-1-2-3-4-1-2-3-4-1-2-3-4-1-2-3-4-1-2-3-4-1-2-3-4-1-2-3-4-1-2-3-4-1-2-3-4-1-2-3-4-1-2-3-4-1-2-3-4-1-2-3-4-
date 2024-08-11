@@ -41,18 +41,16 @@ local Slider = LocalPlayerTab:CreateSlider({
         local character = player and player.Character
         local humanoid = character and character:FindFirstChild("Humanoid")
 
-        local function updateWalkSpeed()
-            if humanoid then
-                humanoid.WalkSpeed = Value
-            end
-        end
-
-        while true do
-            updateWalkSpeed()
-            wait(0.001) -- Pause for 0.001 seconds
+        if humanoid then
+            humanoid.WalkSpeed = Value
         end
     end,
 })
+
+game.Players.LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+    local humanoid = newCharacter:WaitForChild("Humanoid")
+    humanoid.WalkSpeed = Slider.CurrentValue -- Set to current slider value on respawn
+end)
 
 local JumpHeightSlider = LocalPlayerTab:CreateSlider({
     Name = "JumpHeight",
@@ -69,18 +67,13 @@ local JumpHeightSlider = LocalPlayerTab:CreateSlider({
         if humanoid then
             humanoid.JumpPower = Value
         end
-
-        coroutine.wrap(function()
-            while true do
-                if humanoid then
-                    humanoid.JumpPower = Value
-                end
-                wait(0.001) -- Pause for 0.001 seconds
-            end
-        end)()
     end,
 })
 
+game.Players.LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+    local humanoid = newCharacter:WaitForChild("Humanoid")
+    humanoid.JumpPower = JumpHeightSlider.CurrentValue -- Set to current slider value on respawn
+end)
 
 local uis = game:GetService("UserInputService")
 local rs = game:GetService("RunService")
