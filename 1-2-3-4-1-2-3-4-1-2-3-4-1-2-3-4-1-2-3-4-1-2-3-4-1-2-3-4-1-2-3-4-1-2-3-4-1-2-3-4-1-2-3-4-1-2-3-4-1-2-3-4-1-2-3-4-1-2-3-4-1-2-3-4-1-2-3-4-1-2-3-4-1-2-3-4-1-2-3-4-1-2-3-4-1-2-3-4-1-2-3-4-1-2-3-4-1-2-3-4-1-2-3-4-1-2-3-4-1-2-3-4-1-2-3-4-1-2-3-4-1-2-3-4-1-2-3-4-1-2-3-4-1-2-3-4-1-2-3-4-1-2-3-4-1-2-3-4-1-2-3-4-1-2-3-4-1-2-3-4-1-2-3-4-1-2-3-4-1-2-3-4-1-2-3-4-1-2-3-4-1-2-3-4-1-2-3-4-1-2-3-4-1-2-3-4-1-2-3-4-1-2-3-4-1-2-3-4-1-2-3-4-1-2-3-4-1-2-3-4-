@@ -283,43 +283,56 @@ local function getNearestPlayer()
     return closestPlayer
 end
 
+-- Function to toggle aim lock via GUI
 local Toggle = AimTab:CreateToggle({
     Name = "AimLock",
     CurrentValue = false,
     Flag = "Toggle3", 
     Callback = function(Value)
-        aimLockActive = Value
+        aimLockActive = Value -- Update aimLockActive based on toggle
     end,
 })
 
+-- Variable to track if the input to aim lock is currently active
+local inputActive = false
+
+-- Function to handle input
 local function onInputBegan(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton2 or (input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.E) then
-        if aimLockActive then
-            aimLockActive = true
-        end
+    if (input.UserInputType == Enum.UserInputType.MouseButton2 or 
+        (input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.E)) 
+        and aimLockActive then
+
+        -- Activate aim lock
+        inputActive = true
     end
 end
 
 local function onInputEnded(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton2 or (input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.E) then
-        aimLockActive = false
+    if input.UserInputType == Enum.UserInputType.MouseButton2 or 
+       (input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.E) then
+
+        -- Deactivate aim lock
+        inputActive = false
     end
 end
 
+-- Connect input events
 UserInputService.InputBegan:Connect(onInputBegan)
 UserInputService.InputEnded:Connect(onInputEnded)
 
+-- Main loop
 while true do
-    wait(0.1) 
+    wait(0.1) -- Update interval for smooth tracking
 
-    if aimLockActive then
+    if inputActive and aimLockActive then
         local nearestPlayer = getNearestPlayer()
 
         if nearestPlayer and nearestPlayer.Character and nearestPlayer.Character:FindFirstChild("Head") then
             local headPosition = nearestPlayer.Character.Head.Position
 
-            local cameraOffset = Vector3.new(0, 2, -10)
-            camera.CFrame = CFrame.new(headPosition + cameraOffset, headPosition)
+            -- Locking the camera to the player's head (adjust distance as needed)
+            local cameraOffset = Vector3.new(0, 2, -10) -- Adjust these values for camera distance/angle
+            camera.CFrame = CFrame.new(headPosition + cameraOffset, headPosition) -- Look at the head
         end
     end
 end
