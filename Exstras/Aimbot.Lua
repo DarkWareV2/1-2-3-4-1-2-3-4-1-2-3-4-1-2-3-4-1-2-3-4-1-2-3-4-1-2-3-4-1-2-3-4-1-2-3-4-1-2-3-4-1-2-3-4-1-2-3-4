@@ -76,31 +76,31 @@ GUI_MAIN                           = Instance.new('ScreenGui', game.CoreGui)
 GUI_TARGET                         = Instance.new('TextLabel', GUI_MAIN)
 GUI_AIM_AT                         = Instance.new('TextLabel', GUI_MAIN)
 
-GUI_MAIN.Name                      = 'AIMBOT'
+--GUI_MAIN.Name                      = 'AIMBOT'
 
-GUI_TARGET.Size                    = UDim2.new(0,200,0,30)
-GUI_TARGET.BackgroundTransparency  = 0.5
-GUI_TARGET.BackgroundColor         = BrickColor.new('Fossil')
-GUI_TARGET.BorderSizePixel         = 0
-GUI_TARGET.Position                = UDim2.new(0.5,-100,0,0)
-GUI_TARGET.Text                    = 'AIMBOT : OFF'
-GUI_TARGET.TextColor3              = Color3.new(1,1,1)
-GUI_TARGET.TextStrokeTransparency  = 1
-GUI_TARGET.TextWrapped             = true
-GUI_TARGET.FontSize                = 'Size24'
-GUI_TARGET.Font                    = 'SourceSansBold'
+--GUI_TARGET.Size                    = UDim2.new(0,200,0,30)
+--GUI_TARGET.BackgroundTransparency  = 0.5
+--GUI_TARGET.BackgroundColor         = BrickColor.new('Fossil')
+--GUI_TARGET.BorderSizePixel         = 0
+--GUI_TARGET.Position                = UDim2.new(0.5,-100,0,0)
+--GUI_TARGET.Text                    = 'AIMBOT : OFF'
+--GUI_TARGET.TextColor3              = Color3.new(1,1,1)
+--GUI_TARGET.TextStrokeTransparency  = 1
+--GUI_TARGET.TextWrapped             = true
+--GUI_TARGET.FontSize                = 'Size24'
+--GUI_TARGET.Font                    = 'SourceSansBold'
 
-GUI_AIM_AT.Size                    = UDim2.new(0,200,0,20)
-GUI_AIM_AT.BackgroundTransparency  = 0.5
-GUI_AIM_AT.BackgroundColor         = BrickColor.new('Fossil')
-GUI_AIM_AT.BorderSizePixel         = 0
-GUI_AIM_AT.Position                = UDim2.new(0.5,-100,0,30)
-GUI_AIM_AT.Text                    = 'AIMING : HEAD'
-GUI_AIM_AT.TextColor3              = Color3.new(1,1,1)
-GUI_AIM_AT.TextStrokeTransparency  = 1
-GUI_AIM_AT.TextWrapped             = true
-GUI_AIM_AT.FontSize                = 'Size18'
-GUI_AIM_AT.Font                    = 'SourceSansBold'
+--GUI_AIM_AT.Size                    = UDim2.new(0,200,0,20)
+--GUI_AIM_AT.BackgroundTransparency  = 0.5
+--GUI_AIM_AT.BackgroundColor         = BrickColor.new('Fossil')
+--GUI_AIM_AT.BorderSizePixel         = 0
+--GUI_AIM_AT.Position                = UDim2.new(0.5,-100,0,30)
+--GUI_AIM_AT.Text                    = 'AIMING : HEAD'
+--GUI_AIM_AT.TextColor3              = Color3.new(1,1,1)
+--GUI_AIM_AT.TextStrokeTransparency  = 1
+--GUI_AIM_AT.TextWrapped             = true
+--GUI_AIM_AT.FontSize                = 'Size18'
+--GUI_AIM_AT.Font                    = 'SourceSansBold'
 
 local TRACK = false
 
