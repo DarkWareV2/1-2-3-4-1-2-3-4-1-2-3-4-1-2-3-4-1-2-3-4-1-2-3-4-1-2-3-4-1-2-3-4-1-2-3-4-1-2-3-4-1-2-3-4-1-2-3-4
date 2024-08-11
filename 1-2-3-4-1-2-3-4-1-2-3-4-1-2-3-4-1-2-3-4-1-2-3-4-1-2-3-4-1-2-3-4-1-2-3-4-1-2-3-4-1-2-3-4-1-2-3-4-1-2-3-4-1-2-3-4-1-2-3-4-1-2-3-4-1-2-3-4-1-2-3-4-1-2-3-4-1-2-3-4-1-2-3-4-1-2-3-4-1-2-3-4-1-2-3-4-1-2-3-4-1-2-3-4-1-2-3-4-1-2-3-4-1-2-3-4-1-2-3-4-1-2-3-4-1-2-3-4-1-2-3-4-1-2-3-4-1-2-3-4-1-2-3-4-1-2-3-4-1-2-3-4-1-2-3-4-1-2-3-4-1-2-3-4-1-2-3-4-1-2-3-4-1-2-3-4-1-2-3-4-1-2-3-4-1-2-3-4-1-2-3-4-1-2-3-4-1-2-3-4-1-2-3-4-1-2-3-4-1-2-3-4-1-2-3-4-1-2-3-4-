@@ -31,7 +31,7 @@ local Section = LocalPlayerTab:CreateSection("Humanoid")
 
 local Slider = LocalPlayerTab:CreateSlider({
     Name = "WalkSpeed",
-    Range = {0, 500},
+    Range = {16, 500},
     Increment = 1,
     Suffix = "WalkSpeed",
     CurrentValue = 16,
@@ -54,24 +54,31 @@ local Slider = LocalPlayerTab:CreateSlider({
     end,
 })
 
--- Note: Remember that this loop will run indefinitely until the script is terminated or the callback can be modified to stop the loop.
-
 local JumpHeightSlider = LocalPlayerTab:CreateSlider({
-	Name = "JumpHeight",
-	Range = {0, 200},
-	Increment = 1,
-	Suffix = "Studs",
-	CurrentValue = 50,
-	Flag = "Slider2",
-	Callback = function(Value)
-		local player = game.Players.LocalPlayer
-		local character = player and player.Character
-		local humanoid = character and character:FindFirstChild("Humanoid")
-		
-		if humanoid then
-			humanoid.JumpPower = Value
-		end
-	end,
+    Name = "JumpHeight",
+    Range = {16, 1000},
+    Increment = 1,
+    Suffix = "Studs",
+    CurrentValue = 50,
+    Flag = "Slider2",
+    Callback = function(Value)
+        local player = game.Players.LocalPlayer
+        local character = player and player.Character
+        local humanoid = character and character:FindFirstChild("Humanoid")
+
+        if humanoid then
+            humanoid.JumpPower = Value
+        end
+
+        coroutine.wrap(function()
+            while true do
+                if humanoid then
+                    humanoid.JumpPower = Value
+                end
+                wait(0.001) -- Pause for 0.001 seconds
+            end
+        end)()
+    end,
 })
 
 
