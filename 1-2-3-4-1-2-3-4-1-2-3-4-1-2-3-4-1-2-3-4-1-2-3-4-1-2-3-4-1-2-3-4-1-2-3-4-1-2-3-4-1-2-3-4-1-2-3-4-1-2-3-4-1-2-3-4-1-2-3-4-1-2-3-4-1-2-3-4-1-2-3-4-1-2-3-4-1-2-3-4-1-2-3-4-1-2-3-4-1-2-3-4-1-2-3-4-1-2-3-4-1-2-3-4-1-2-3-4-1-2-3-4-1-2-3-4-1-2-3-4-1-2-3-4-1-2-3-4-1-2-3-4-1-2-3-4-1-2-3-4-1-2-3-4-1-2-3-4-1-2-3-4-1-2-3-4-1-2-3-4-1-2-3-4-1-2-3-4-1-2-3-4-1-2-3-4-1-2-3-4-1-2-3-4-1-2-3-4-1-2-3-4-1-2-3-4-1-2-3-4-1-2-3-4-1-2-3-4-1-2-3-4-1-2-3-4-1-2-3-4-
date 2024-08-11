@@ -255,12 +255,12 @@ runService:BindToRenderStep("esp", Enum.RenderPriority.Camera.Value, function()
     end
 end)
 
+-- Create the AimTab GUI and section
 local AimTab = Window:CreateTab("Aim", 4483362458)
-local Section = AimTab:CreateSection("Aimbot")
+local Section = AimTab:CreateSection("Aim")
 
--- Assuming aim tab and toggle are already defined in your GUI setup
-local AimTab = ... -- Reference to your AimTab
-local aimLockActive = false -- Variable to check if aim lock is active
+-- Variable to check if aim lock is active
+local aimLockActive = false 
 
 -- Create the AimLock Toggle
 local Toggle = AimTab:CreateToggle({
@@ -272,10 +272,10 @@ local Toggle = AimTab:CreateToggle({
     end,
 })
 
--- Other previous setup
-PLAYER  = game.Players.LocalPlayer
-MOUSE   = PLAYER:GetMouse()
-CC      = game.Workspace.CurrentCamera
+-- Other setup and variables
+local PLAYER  = game.Players.LocalPlayer
+local MOUSE   = PLAYER:GetMouse()
+local CC      = game.Workspace.CurrentCamera
 
 ESP_ENABLED = false
 _G.FREE_FOR_ALL = true
@@ -287,7 +287,7 @@ function GetNearestPlayerToMouse()
     local PLAYERS = {}
     local PLAYER_HOLD = {}
     local DISTANCES = {}
-    
+
     for i, v in pairs(game.Players:GetPlayers()) do
         if v ~= PLAYER then
             table.insert(PLAYERS, v)
@@ -406,6 +406,7 @@ MOUSE.KeyDown:connect(function(KEY)
     end
 end)
 
+-- Aim Lock Logic
 game:GetService('RunService').RenderStepped:connect(function()
     if aimLockActive then -- Use aimLockActive from the toggle
         local TARGET = GetNearestPlayerToMouse()
