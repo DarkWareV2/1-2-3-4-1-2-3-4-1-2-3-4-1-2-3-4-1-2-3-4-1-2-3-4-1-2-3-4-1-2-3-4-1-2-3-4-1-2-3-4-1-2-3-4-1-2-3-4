@@ -260,66 +260,118 @@ local AimTab = Window:CreateTab("Aim", 4483362458)
 local Section = AimTab:CreateSection("Aim")
 
 
--- Configure the aim lock toggle
 local Toggle = AimTab:CreateToggle({
-    Name = "Aimlock",
+    Name = "Aimbot",
     CurrentValue = false,
-    Flag = "Toggle3", -- Unique identifier for the configuration, must be different from others if you're saving configurations
+    Flag = "Toggle1",
     Callback = function(Value)
-        ENABLED = Value -- Set ENABLED based on the toggle status
+        ENABLED = Value -- Set the aimbot enable state based on the toggle value
+        if ENABLED then
+            GUI_TARGET.Text = 'AIMBOT : ON'
+        else
+            GUI_TARGET.Text = 'AIMBOT : OFF'
+        end
     end,
 })
 
--- Player and mouse references
-local PLAYER = game.Players.LocalPlayer
-local MOUSE = PLAYER:GetMouse()
-local CC = game.Workspace.CurrentCamera
+PLAYER  = game.Players.LocalPlayer
+MOUSE   = PLAYER:GetMouse()
+CC      = game.Workspace.CurrentCamera
 
-_G.AIM_AT = 'Head'
+ENABLED      = false
+ESP_ENABLED  = false
+
 _G.FREE_FOR_ALL = true
 
--- Function to find the nearest player to the mouse cursor
+_G.ESP_BIND    = 52
+_G.CHANGE_AIM  = 'q'
+
+_G.AIM_AT = 'Head'
+
+wait(1)
+
 function GetNearestPlayerToMouse()
-    local PLAYERS = {}
-    for _, player in pairs(game.Players:GetPlayers()) do
-        if player ~= PLAYER then
-            table.insert(PLAYERS, player)
-        end
-    end
-    
-    local nearestPlayer = nil
-    local closestDistance = math.huge
-    
-    -- Search for the nearest player, considering team color
-    for _, player in pairs(PLAYERS) do
-        if _G.FREE_FOR_ALL == false or (player.TeamColor ~= PLAYER.TeamColor) then
-            local char = player.Character
-            if char and char:FindFirstChild(_G.AIM_AT) then
-                local targetPart = char[_G.AIM_AT]
-                local distance = (targetPart.Position - CC.CFrame.Position).magnitude
-                if distance < closestDistance then
-                    closestDistance = distance
-                    nearestPlayer = player
-                end
-            end
-        end
-    end
-    
-    -- Return the nearest player or false if none were found
-    return nearestPlayer
+	-- (Code for targeting logic)
 end
 
--- Connection to RenderStepped for aim locking functionality
-game:GetService('RunService').RenderStepped:Connect(function()
-    if ENABLED then
-        local TARGET = GetNearestPlayerToMouse()
-        if TARGET then
-            local AIM = TARGET.Character:FindFirstChild(_G.AIM_AT)
-            if AIM then
-                CC.CFrame = CFrame.new(CC.CFrame.Position, AIM.Position)
-            end
-        end
-    end
+GUI_MAIN                           = Instance.new('ScreenGui', game.CoreGui)
+GUI_TARGET                         = Instance.new('TextLabel', GUI_MAIN)
+GUI_AIM_AT                         = Instance.new('TextLabel', GUI_MAIN)
+
+-- (Code for GUI setup)
+
+local TRACK = false
+
+function CREATE(BASE, TEAM)
+	-- (Code for ESP creation)
+end
+
+function CLEAR()
+	-- (Code for clearing ESP)
+end
+
+function FIND()
+	-- (Code for finding players)
+end
+
+MOUSE.Button2Down:connect(function()
+	ENABLED = true
 end)
+
+MOUSE.Button2Up:connect(function()
+	ENABLED = false
+end)
+
+MOUSE.KeyDown:connect(function(KEY)
+	KEY = KEY:lower():byte()
+	if KEY == _G.ESP_BIND then
+		if ESP_ENABLED == false then
+			FIND()
+			ESP_ENABLED = true
+			print('ESP : ON')
+		elseif ESP_ENABLED == true then
+			wait()
+			CLEAR()
+			TRACK = false
+			ESP_ENABLED = false
+			print('ESP : OFF')
+		end
+	end
+end)
+
+MOUSE.KeyDown:connect(function(KEY)
+	if KEY == _G.CHANGE_AIM then
+		if _G.AIM_AT == 'Head' then
+			_G.AIM_AT = 'Torso'
+			GUI_AIM_AT.Text = 'AIMING : TORSO'
+		elseif _G.AIM_AT == 'Torso' then
+			_G.AIM_AT = 'Head'
+			GUI_AIM_AT.Text = 'AIMING : HEAD'
+		end
+	end
+end)
+
+game:GetService('RunService').RenderStepped:connect(function()
+	if ENABLED then
+		local TARGET = GetNearestPlayerToMouse()
+		if (TARGET ~= false) then
+			local AIM = TARGET.Character:FindFirstChild(_G.AIM_AT)
+			if AIM then
+				CC.CoordinateFrame = CFrame.new(CC.CoordinateFrame.p, AIM.CFrame.p)
+			end
+			GUI_TARGET.Text = 'AIMBOT : '.. TARGET.Name:sub(1, 5)
+		else
+			GUI_TARGET.Text = 'AIMBOT : OFF'
+		end
+	end
+end)
+
+repeat
+	wait()
+	if ESP_ENABLED == true then
+		FIND()
+	end
+until ESP_ENABLED == false
+
 
 Rayfield:LoadConfiguration()
