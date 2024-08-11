@@ -255,5 +255,53 @@ runService:BindToRenderStep("esp", Enum.RenderPriority.Camera.Value, function()
     end
 end)
 
+local AimTab = Window:CreateTab("Aim", 4483362458)
+local Section = AimTab:CreateSection("Aimbot")
+
+local player = game.Players.LocalPlayer
+local camera = workspace.CurrentCamera
+
+local aimLockActive = false
+
+local function getNearestPlayer()
+    local closestPlayer = nil
+    local closestDistance = math.huge
+    
+    for _, p in pairs(game.Players:GetPlayers()) do
+        if p ~= player and p.Character and p.Character:FindFirstChild("Head") then
+            local distance = (player.Character.HumanoidRootPart.Position - p.Character.Head.Position).magnitude
+            if distance < closestDistance then
+                closestDistance = distance
+                closestPlayer = p
+            end
+        end
+    end
+    
+    return closestPlayer
+end
+
+local Toggle = AimTab:CreateToggle({
+    Name = "AimLock",
+    CurrentValue = false,
+    Flag = "Toggle3", 
+    Callback = function(Value)
+        aimLockActive = Value
+    end,
+})
+
+while true do
+    wait(0.01)
+
+    if aimLockActive then
+        local nearestPlayer = getNearestPlayer()
+
+        if nearestPlayer and nearestPlayer.Character and nearestPlayer.Character:FindFirstChild("Head") then
+            local headPosition = nearestPlayer.Character.Head.Position
+
+            local cameraOffset = Vector3.new(0, 2, -10)
+            camera.CFrame = CFrame.new(headPosition + cameraOffset, headPosition)
+        end
+    end
+end
 
 Rayfield:LoadConfiguration()
