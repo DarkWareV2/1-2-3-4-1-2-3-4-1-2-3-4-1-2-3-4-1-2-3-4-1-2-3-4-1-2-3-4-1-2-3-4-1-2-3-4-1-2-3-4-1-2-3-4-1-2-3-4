@@ -260,7 +260,7 @@ local AimTab = Window:CreateTab("Aim", 4483362458)
 local Section = AimTab:CreateSection("Aim")
 
 -- Variable to check if aim lock is active
-local aimLockActive = false 
+local aimLockActive = false
 
 -- Create the AimLock Toggle
 local Toggle = AimTab:CreateToggle({
@@ -269,13 +269,31 @@ local Toggle = AimTab:CreateToggle({
     Flag = "Toggle3", 
     Callback = function(Value)
         aimLockActive = Value -- Set aimLockActive to the toggle's value
+
+        if aimLockActive then
+            -- Start aiming logic when toggle is enabled
+            game:GetService('RunService').RenderStepped:Connect(function()
+                if aimLockActive then
+                    local TARGET = GetNearestPlayerToMouse()
+                    if TARGET ~= false then
+                        local AIM = TARGET.Character:FindFirstChild(_G.AIM_AT)
+                        if AIM then
+                            CC.CFrame = CFrame.new(CC.CFrame.p, AIM.CFrame.p)
+                        end
+                    end
+                end
+            end)
+        else
+            -- Optional: Can include logic to handle when AimLock is turned off, such as clearing or stopping
+            print('AimLock deactivated')
+        end
     end,
 })
 
--- Other setup and variables
-local PLAYER  = game.Players.LocalPlayer
-local MOUSE   = PLAYER:GetMouse()
-local CC      = game.Workspace.CurrentCamera
+-- Other setup and relevant functions go here
+local PLAYER = game.Players.LocalPlayer
+local MOUSE = PLAYER:GetMouse()
+local CC = game.Workspace.CurrentCamera
 
 ESP_ENABLED = false
 _G.FREE_FOR_ALL = true
@@ -402,19 +420,6 @@ MOUSE.KeyDown:connect(function(KEY)
             _G.AIM_AT = 'Torso'
         elseif _G.AIM_AT == 'Torso' then
             _G.AIM_AT = 'Head'
-        end
-    end
-end)
-
--- Aim Lock Logic
-game:GetService('RunService').RenderStepped:connect(function()
-    if aimLockActive then -- Use aimLockActive from the toggle
-        local TARGET = GetNearestPlayerToMouse()
-        if TARGET ~= false then
-            local AIM = TARGET.Character:FindFirstChild(_G.AIM_AT)
-            if AIM then
-                CC.CFrame = CFrame.new(CC.CFrame.p, AIM.CFrame.p)
-            end
         end
     end
 end)
