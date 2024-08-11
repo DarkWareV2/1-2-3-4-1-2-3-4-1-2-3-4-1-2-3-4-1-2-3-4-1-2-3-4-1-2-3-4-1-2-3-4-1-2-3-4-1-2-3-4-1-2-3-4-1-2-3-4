@@ -258,83 +258,159 @@ end)
 local AimTab = Window:CreateTab("Aim", 4483362458)
 local Section = AimTab:CreateSection("Aimbot")
 
-local player = game.Players.LocalPlayer
-local camera = workspace.CurrentCamera
-local UserInputService = game:GetService("UserInputService")
+PLAYER  = game.Players.LocalPlayer
+MOUSE   = PLAYER:GetMouse()
+CC      = game.Workspace.CurrentCamera
 
--- Variable to track the aim lock status
-local aimLockActive = false
+aimLockActive = false  -- Initialize the aim lock state
+ESP_ENABLED  = false
 
--- Function to get the nearest player
-local function getNearestPlayer()
-    local closestPlayer = nil
-    local closestDistance = math.huge
+_G.FREE_FOR_ALL = true
+_G.AIM_AT = 'Head'
+
+wait(1)
+
+function GetNearestPlayerToMouse()
+    local PLAYERS = {}
+    local PLAYER_HOLD = {}
+    local DISTANCES = {}
     
-    for _, p in pairs(game.Players:GetPlayers()) do
-        if p ~= player and p.Character and p.Character:FindFirstChild("Head") then
-            local distance = (player.Character.HumanoidRootPart.Position - p.Character.Head.Position).magnitude
-            if distance < closestDistance then
-                closestDistance = distance
-                closestPlayer = p
+    for i, v in pairs(game.Players:GetPlayers()) do
+        if v ~= PLAYER then
+            table.insert(PLAYERS, v)
+        end
+    end
+    
+    for i, v in pairs(PLAYERS) do
+        if _G.FREE_FOR_ALL == false then
+            if v and (v.Character) ~= nil and v.TeamColor ~= PLAYER.TeamColor then
+                local AIM = v.Character:FindFirstChild(_G.AIM_AT)
+                if AIM ~= nil then
+                    local DISTANCE = (AIM.Position - CC.CFrame.p).magnitude
+                    local RAY = Ray.new(CC.CFrame.p, (MOUSE.Hit.p - CC.CFrame.p).unit * DISTANCE)
+                    local HIT, POS = game.Workspace:FindPartOnRay(RAY, game.Workspace)
+                    local DIFF = math.floor((POS - AIM.Position).magnitude)
+                    PLAYER_HOLD[v.Name .. i] = {}
+                    PLAYER_HOLD[v.Name .. i].dist = DISTANCE
+                    PLAYER_HOLD[v.Name .. i].plr = v
+                    PLAYER_HOLD[v.Name .. i].diff = DIFF
+                    table.insert(DISTANCES, DIFF)
+                end
+            end
+        elseif _G.FREE_FOR_ALL == true then
+            local AIM = v.Character:FindFirstChild(_G.AIM_AT)
+            if AIM ~= nil then
+                local DISTANCE = (AIM.Position - CC.CFrame.p).magnitude
+                local RAY = Ray.new(CC.CFrame.p, (MOUSE.Hit.p - CC.CFrame.p).unit * DISTANCE)
+                local HIT, POS = game.Workspace:FindPartOnRay(RAY, game.Workspace)
+                local DIFF = math.floor((POS - AIM.Position).magnitude)
+                PLAYER_HOLD[v.Name .. i] = {}
+                PLAYER_HOLD[v.Name .. i].dist = DISTANCE
+                PLAYER_HOLD[v.Name .. i].plr = v
+                PLAYER_HOLD[v.Name .. i].diff = DIFF
+                table.insert(DISTANCES, DIFF)
             end
         end
     end
-    
-    return closestPlayer
-end
 
--- Function to toggle aim lock via GUI
-local Toggle = AimTab:CreateToggle({
-    Name = "AimLock",
-    CurrentValue = false,
-    Flag = "Toggle3", 
-    Callback = function(Value)
-        aimLockActive = Value -- Update aimLockActive based on toggle
-    end,
-})
-
--- Variable to track if the input to aim lock is currently active
-local inputActive = false
-
--- Function to handle input
-local function onInputBegan(input)
-    if (input.UserInputType == Enum.UserInputType.MouseButton2 or 
-        (input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.E)) 
-        and aimLockActive then
-
-        -- Activate aim lock
-        inputActive = true
+    if unpack(DISTANCES) == nil then
+        return false
     end
-end
 
-local function onInputEnded(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton2 or 
-       (input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.E) then
-
-        -- Deactivate aim lock
-        inputActive = false
+    local L_DISTANCE = math.floor(math.min(unpack(DISTANCES)))
+    if L_DISTANCE > 20 then
+        return false
     end
+
+    for i, v in pairs(PLAYER_HOLD) do
+        if v.diff == L_DISTANCE then
+            return v.plr
+        end
+    end
+    return false
 end
 
--- Connect input events
-UserInputService.InputBegan:Connect(onInputBegan)
-UserInputService.InputEnded:Connect(onInputEnded)
-
--- Main loop
-while true do
-    wait(0.1) -- Update interval for smooth tracking
-
-    if inputActive and aimLockActive then
-        local nearestPlayer = getNearestPlayer()
-
-        if nearestPlayer and nearestPlayer.Character and nearestPlayer.Character:FindFirstChild("Head") then
-            local headPosition = nearestPlayer.Character.Head.Position
-
-            -- Locking the camera to the player's head (adjust distance as needed)
-            local cameraOffset = Vector3.new(0, 2, -10) -- Adjust these values for camera distance/angle
-            camera.CFrame = CFrame.new(headPosition + cameraOffset, headPosition) -- Look at the head
+function CLEAR()
+    for _, v in pairs(PLAYER.PlayerGui:children()) do
+        if v.Name == 'ESP' and v:IsA('BillboardGui') then
+            v:Destroy()
         end
     end
 end
+
+function FIND()
+    CLEAR()
+    TRACK = true
+    spawn(function()
+        while wait() do
+            if TRACK then
+                CLEAR()
+                for i, v in pairs(game.Players:GetChildren()) do
+                    if v.Character and v.Character:FindFirstChild('Head') then
+                        if _G.FREE_FOR_ALL == false then
+                            if v.TeamColor ~= PLAYER.TeamColor then
+                                if v.Character:FindFirstChild('Head') then
+                                    CREATE(v.Character.Head, true)
+                                end
+                            end
+                        else
+                            if v.Character:FindFirstChild('Head') then
+                                CREATE(v.Character.Head, true)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        wait(1)
+    end)
+end
+
+MOUSE.Button2Down:connect(function()
+    aimLockActive = true
+end)
+
+MOUSE.Button2Up:connect(function()
+    aimLockActive = false
+end)
+
+MOUSE.KeyDown:connect(function(KEY)
+    KEY = KEY:lower():byte()
+    if KEY == _G.ESP_BIND then
+        if ESP_ENABLED == false then
+            FIND()
+            ESP_ENABLED = true
+            print('ESP : ON')
+        elseif ESP_ENABLED == true then
+            wait()
+            CLEAR()
+            TRACK = false
+            ESP_ENABLED = false
+            print('ESP : OFF')
+        end
+    end
+end)
+
+MOUSE.KeyDown:connect(function(KEY)
+    if KEY == 'q' then
+        if _G.AIM_AT == 'Head' then
+            _G.AIM_AT = 'Torso'
+        elseif _G.AIM_AT == 'Torso' then
+            _G.AIM_AT = 'Head'
+        end
+    end
+end)
+
+game:GetService('RunService').RenderStepped:connect(function()
+    if aimLockActive then
+        local TARGET = GetNearestPlayerToMouse()
+        if TARGET ~= false then
+            local AIM = TARGET.Character:FindFirstChild(_G.AIM_AT)
+            if AIM then
+                CC.CFrame = CFrame.new(CC.CFrame.p, AIM.CFrame.p)
+            end
+        end
+    end
+end)
 
 Rayfield:LoadConfiguration()
