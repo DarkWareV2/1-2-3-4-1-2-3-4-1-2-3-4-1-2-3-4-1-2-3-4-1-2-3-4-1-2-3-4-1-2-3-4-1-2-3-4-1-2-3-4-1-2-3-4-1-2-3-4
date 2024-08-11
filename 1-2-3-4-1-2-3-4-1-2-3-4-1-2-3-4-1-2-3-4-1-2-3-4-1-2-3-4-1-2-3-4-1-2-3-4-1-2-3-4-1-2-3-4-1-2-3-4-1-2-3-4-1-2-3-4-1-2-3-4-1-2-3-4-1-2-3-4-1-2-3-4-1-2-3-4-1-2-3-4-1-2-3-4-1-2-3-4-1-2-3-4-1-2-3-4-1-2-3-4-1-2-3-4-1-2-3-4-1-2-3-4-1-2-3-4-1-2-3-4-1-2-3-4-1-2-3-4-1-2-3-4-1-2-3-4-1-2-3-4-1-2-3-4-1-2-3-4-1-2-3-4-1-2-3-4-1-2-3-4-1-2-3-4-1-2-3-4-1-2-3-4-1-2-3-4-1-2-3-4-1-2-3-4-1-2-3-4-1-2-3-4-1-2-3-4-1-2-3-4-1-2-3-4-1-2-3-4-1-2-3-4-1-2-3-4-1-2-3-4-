@@ -259,167 +259,65 @@ end)
 local AimTab = Window:CreateTab("Aim", 4483362458)
 local Section = AimTab:CreateSection("Aim")
 
--- Variable to check if aim lock is active
-local aimLockActive = false
 
--- Create the AimLock Toggle
+-- Configure the aim lock toggle
 local Toggle = AimTab:CreateToggle({
-    Name = "AimLock",
+    Name = "Aimlock",
     CurrentValue = false,
-    Flag = "Toggle3", 
+    Flag = "Toggle3", -- Unique identifier for the configuration, must be different from others if you're saving configurations
     Callback = function(Value)
-        aimLockActive = Value -- Set aimLockActive to the toggle's value
-
-        if aimLockActive then
-            -- Start aiming logic when toggle is enabled
-            game:GetService('RunService').RenderStepped:Connect(function()
-                if aimLockActive then
-                    local TARGET = GetNearestPlayerToMouse()
-                    if TARGET ~= false then
-                        local AIM = TARGET.Character:FindFirstChild(_G.AIM_AT)
-                        if AIM then
-                            CC.CFrame = CFrame.new(CC.CFrame.p, AIM.CFrame.p)
-                        end
-                    end
-                end
-            end)
-        else
-            -- Optional: Can include logic to handle when AimLock is turned off, such as clearing or stopping
-            print('AimLock deactivated')
-        end
+        ENABLED = Value -- Set ENABLED based on the toggle status
     end,
 })
 
--- Other setup and relevant functions go here
+-- Player and mouse references
 local PLAYER = game.Players.LocalPlayer
 local MOUSE = PLAYER:GetMouse()
 local CC = game.Workspace.CurrentCamera
 
-ESP_ENABLED = false
-_G.FREE_FOR_ALL = true
 _G.AIM_AT = 'Head'
+_G.FREE_FOR_ALL = true
 
-wait(1)
-
+-- Function to find the nearest player to the mouse cursor
 function GetNearestPlayerToMouse()
     local PLAYERS = {}
-    local PLAYER_HOLD = {}
-    local DISTANCES = {}
-
-    for i, v in pairs(game.Players:GetPlayers()) do
-        if v ~= PLAYER then
-            table.insert(PLAYERS, v)
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player ~= PLAYER then
+            table.insert(PLAYERS, player)
         end
     end
     
-    for i, v in pairs(PLAYERS) do
-        if _G.FREE_FOR_ALL == false then
-            if v and (v.Character) ~= nil and v.TeamColor ~= PLAYER.TeamColor then
-                local AIM = v.Character:FindFirstChild(_G.AIM_AT)
-                if AIM ~= nil then
-                    local DISTANCE = (AIM.Position - CC.CFrame.p).magnitude
-                    local RAY = Ray.new(CC.CFrame.p, (MOUSE.Hit.p - CC.CFrame.p).unit * DISTANCE)
-                    local HIT, POS = game.Workspace:FindPartOnRay(RAY, game.Workspace)
-                    local DIFF = math.floor((POS - AIM.Position).magnitude)
-                    PLAYER_HOLD[v.Name .. i] = {}
-                    PLAYER_HOLD[v.Name .. i].dist = DISTANCE
-                    PLAYER_HOLD[v.Name .. i].plr = v
-                    PLAYER_HOLD[v.Name .. i].diff = DIFF
-                    table.insert(DISTANCES, DIFF)
+    local nearestPlayer = nil
+    local closestDistance = math.huge
+    
+    -- Search for the nearest player, considering team color
+    for _, player in pairs(PLAYERS) do
+        if _G.FREE_FOR_ALL == false or (player.TeamColor ~= PLAYER.TeamColor) then
+            local char = player.Character
+            if char and char:FindFirstChild(_G.AIM_AT) then
+                local targetPart = char[_G.AIM_AT]
+                local distance = (targetPart.Position - CC.CFrame.Position).magnitude
+                if distance < closestDistance then
+                    closestDistance = distance
+                    nearestPlayer = player
                 end
             end
-        else
-            local AIM = v.Character:FindFirstChild(_G.AIM_AT)
+        end
+    end
+    
+    -- Return the nearest player or false if none were found
+    return nearestPlayer
+end
+
+-- Connection to RenderStepped for aim locking functionality
+game:GetService('RunService').RenderStepped:Connect(function()
+    if ENABLED then
+        local TARGET = GetNearestPlayerToMouse()
+        if TARGET then
+            local AIM = TARGET.Character:FindFirstChild(_G.AIM_AT)
             if AIM then
-                local DISTANCE = (AIM.Position - CC.CFrame.p).magnitude
-                local RAY = Ray.new(CC.CFrame.p, (MOUSE.Hit.p - CC.CFrame.p).unit * DISTANCE)
-                local HIT, POS = game.Workspace:FindPartOnRay(RAY, game.Workspace)
-                local DIFF = math.floor((POS - AIM.Position).magnitude)
-                PLAYER_HOLD[v.Name .. i] = {}
-                PLAYER_HOLD[v.Name .. i].dist = DISTANCE
-                PLAYER_HOLD[v.Name .. i].plr = v
-                PLAYER_HOLD[v.Name .. i].diff = DIFF
-                table.insert(DISTANCES, DIFF)
+                CC.CFrame = CFrame.new(CC.CFrame.Position, AIM.Position)
             end
-        end
-    end
-
-    if unpack(DISTANCES) == nil then
-        return false
-    end
-
-    local L_DISTANCE = math.floor(math.min(unpack(DISTANCES)))
-    if L_DISTANCE > 20 then
-        return false
-    end
-
-    for i, v in pairs(PLAYER_HOLD) do
-        if v.diff == L_DISTANCE then
-            return v.plr
-        end
-    end
-    return false
-end
-
-function CLEAR()
-    for _, v in pairs(PLAYER.PlayerGui:children()) do
-        if v.Name == 'ESP' and v:IsA('BillboardGui') then
-            v:Destroy()
-        end
-    end
-end
-
-function FIND()
-    CLEAR()
-    TRACK = true
-    spawn(function()
-        while wait() do
-            if TRACK then
-                CLEAR()
-                for i, v in pairs(game.Players:GetChildren()) do
-                    if v.Character and v.Character:FindFirstChild('Head') then
-                        if _G.FREE_FOR_ALL == false then
-                            if v.TeamColor ~= PLAYER.TeamColor then
-                                if v.Character:FindFirstChild('Head') then
-                                    CREATE(v.Character.Head, true)
-                                end
-                            end
-                        else
-                            if v.Character:FindFirstChild('Head') then
-                                CREATE(v.Character.Head, true)
-                            end
-                        end
-                    end
-                end
-            end
-        end
-        wait(1)
-    end)
-end
-
-MOUSE.KeyDown:connect(function(KEY)
-    KEY = KEY:lower():byte()
-    if KEY == _G.ESP_BIND then
-        if ESP_ENABLED == false then
-            FIND()
-            ESP_ENABLED = true
-            print('ESP : ON')
-        elseif ESP_ENABLED == true then
-            wait()
-            CLEAR()
-            TRACK = false
-            ESP_ENABLED = false
-            print('ESP : OFF')
-        end
-    end
-end)
-
-MOUSE.KeyDown:connect(function(KEY)
-    if KEY == 'q' then
-        if _G.AIM_AT == 'Head' then
-            _G.AIM_AT = 'Torso'
-        elseif _G.AIM_AT == 'Torso' then
-            _G.AIM_AT = 'Head'
         end
     end
 end)
