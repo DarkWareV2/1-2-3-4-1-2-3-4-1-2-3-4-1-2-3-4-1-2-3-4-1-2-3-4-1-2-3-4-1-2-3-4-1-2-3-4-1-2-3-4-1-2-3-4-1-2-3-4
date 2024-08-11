@@ -30,22 +30,31 @@ local LocalPlayerTab = Window:CreateTab("Local Player", 4483362458)
 local Section = LocalPlayerTab:CreateSection("Humanoid")
 
 local Slider = LocalPlayerTab:CreateSlider({
-	Name = "WalkSpeed",
-	Range = {0, 500},
-	Increment = 1,
-	Suffix = "WalkSpeed",
-	CurrentValue = 16,
-	Flag = "Slider1",
-	Callback = function(Value)
-		local player = game.Players.LocalPlayer
-		local character = player and player.Character
-		local humanoid = character and character:FindFirstChild("Humanoid")
-		
-		if humanoid then
-			humanoid.WalkSpeed = Value
-		end
-	end,
+    Name = "WalkSpeed",
+    Range = {0, 500},
+    Increment = 1,
+    Suffix = "WalkSpeed",
+    CurrentValue = 16,
+    Flag = "Slider1",
+    Callback = function(Value)
+        local player = game.Players.LocalPlayer
+        local character = player and player.Character
+        local humanoid = character and character:FindFirstChild("Humanoid")
+
+        local function updateWalkSpeed()
+            if humanoid then
+                humanoid.WalkSpeed = Value
+            end
+        end
+
+        while true do
+            updateWalkSpeed()
+            wait(0.001) -- Pause for 0.001 seconds
+        end
+    end,
 })
+
+-- Note: Remember that this loop will run indefinitely until the script is terminated or the callback can be modified to stop the loop.
 
 local JumpHeightSlider = LocalPlayerTab:CreateSlider({
 	Name = "JumpHeight",
