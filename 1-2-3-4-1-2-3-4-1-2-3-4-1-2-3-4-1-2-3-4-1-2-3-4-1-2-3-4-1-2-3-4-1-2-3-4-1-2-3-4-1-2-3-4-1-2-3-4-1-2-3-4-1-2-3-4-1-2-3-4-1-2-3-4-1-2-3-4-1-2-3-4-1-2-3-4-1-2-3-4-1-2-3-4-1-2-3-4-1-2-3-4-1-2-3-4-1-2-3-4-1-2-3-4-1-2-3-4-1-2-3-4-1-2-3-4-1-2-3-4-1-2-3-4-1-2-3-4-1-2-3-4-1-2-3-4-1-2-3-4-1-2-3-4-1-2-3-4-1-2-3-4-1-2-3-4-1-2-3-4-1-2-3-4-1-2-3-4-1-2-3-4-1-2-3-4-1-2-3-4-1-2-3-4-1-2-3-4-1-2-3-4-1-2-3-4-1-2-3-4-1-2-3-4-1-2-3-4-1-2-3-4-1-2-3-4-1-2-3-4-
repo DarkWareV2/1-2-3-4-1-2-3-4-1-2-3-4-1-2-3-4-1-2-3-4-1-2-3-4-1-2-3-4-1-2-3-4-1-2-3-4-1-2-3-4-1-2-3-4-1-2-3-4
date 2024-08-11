@@ -258,13 +258,26 @@ end)
 local AimTab = Window:CreateTab("Aim", 4483362458)
 local Section = AimTab:CreateSection("Aimbot")
 
+-- Assuming aim tab and toggle are already defined in your GUI setup
+local AimTab = ... -- Reference to your AimTab
+local aimLockActive = false -- Variable to check if aim lock is active
+
+-- Create the AimLock Toggle
+local Toggle = AimTab:CreateToggle({
+    Name = "AimLock",
+    CurrentValue = false,
+    Flag = "Toggle3", 
+    Callback = function(Value)
+        aimLockActive = Value -- Set aimLockActive to the toggle's value
+    end,
+})
+
+-- Other previous setup
 PLAYER  = game.Players.LocalPlayer
 MOUSE   = PLAYER:GetMouse()
 CC      = game.Workspace.CurrentCamera
 
-aimLockActive = false  -- Initialize the aim lock state
-ESP_ENABLED  = false
-
+ESP_ENABLED = false
 _G.FREE_FOR_ALL = true
 _G.AIM_AT = 'Head'
 
@@ -297,9 +310,9 @@ function GetNearestPlayerToMouse()
                     table.insert(DISTANCES, DIFF)
                 end
             end
-        elseif _G.FREE_FOR_ALL == true then
+        else
             local AIM = v.Character:FindFirstChild(_G.AIM_AT)
-            if AIM ~= nil then
+            if AIM then
                 local DISTANCE = (AIM.Position - CC.CFrame.p).magnitude
                 local RAY = Ray.new(CC.CFrame.p, (MOUSE.Hit.p - CC.CFrame.p).unit * DISTANCE)
                 local HIT, POS = game.Workspace:FindPartOnRay(RAY, game.Workspace)
@@ -366,14 +379,6 @@ function FIND()
     end)
 end
 
-MOUSE.Button2Down:connect(function()
-    aimLockActive = true
-end)
-
-MOUSE.Button2Up:connect(function()
-    aimLockActive = false
-end)
-
 MOUSE.KeyDown:connect(function(KEY)
     KEY = KEY:lower():byte()
     if KEY == _G.ESP_BIND then
@@ -402,7 +407,7 @@ MOUSE.KeyDown:connect(function(KEY)
 end)
 
 game:GetService('RunService').RenderStepped:connect(function()
-    if aimLockActive then
+    if aimLockActive then -- Use aimLockActive from the toggle
         local TARGET = GetNearestPlayerToMouse()
         if TARGET ~= false then
             local AIM = TARGET.Character:FindFirstChild(_G.AIM_AT)
