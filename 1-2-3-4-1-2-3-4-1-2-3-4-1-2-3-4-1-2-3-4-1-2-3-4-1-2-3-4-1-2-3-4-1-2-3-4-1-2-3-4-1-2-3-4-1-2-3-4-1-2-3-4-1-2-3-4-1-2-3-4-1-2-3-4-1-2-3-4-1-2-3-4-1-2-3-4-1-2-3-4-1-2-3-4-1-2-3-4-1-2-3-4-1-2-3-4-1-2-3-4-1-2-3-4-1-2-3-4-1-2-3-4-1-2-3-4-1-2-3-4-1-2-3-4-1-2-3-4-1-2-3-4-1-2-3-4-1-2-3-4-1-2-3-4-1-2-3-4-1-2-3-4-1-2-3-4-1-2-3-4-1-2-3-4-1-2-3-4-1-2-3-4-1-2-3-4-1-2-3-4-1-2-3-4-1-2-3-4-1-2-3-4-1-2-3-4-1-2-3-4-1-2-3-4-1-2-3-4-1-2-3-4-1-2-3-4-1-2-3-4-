@@ -1,9 +1,10 @@
+print("Test 1 Passed")
 getgenv().SecureMode = true
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local Window = Rayfield:CreateWindow({
 	Name = "Universe Universal only for cats like mr pi something",
 	LoadingTitle = "Loading in progress...",
-	LoadingSubtitle = "Scripted By Fire OfficialDC Tested By Mi_aio",
+	LoadingSubtitle = "Scripted By Fire OfficialDC Tested By Mi_aio and dreamurrd",
 	ConfigurationSaving = {
 		Enabled = true,
 		FolderName = true,
@@ -274,5 +275,5 @@ local Button = AimTab:CreateButton({
 		loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkWareV2/1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4/main/Exstras/Aimbot.Lua'))()
 	end,
 })
-
+print("Test 2 Passed")
 Rayfield:LoadConfiguration()
