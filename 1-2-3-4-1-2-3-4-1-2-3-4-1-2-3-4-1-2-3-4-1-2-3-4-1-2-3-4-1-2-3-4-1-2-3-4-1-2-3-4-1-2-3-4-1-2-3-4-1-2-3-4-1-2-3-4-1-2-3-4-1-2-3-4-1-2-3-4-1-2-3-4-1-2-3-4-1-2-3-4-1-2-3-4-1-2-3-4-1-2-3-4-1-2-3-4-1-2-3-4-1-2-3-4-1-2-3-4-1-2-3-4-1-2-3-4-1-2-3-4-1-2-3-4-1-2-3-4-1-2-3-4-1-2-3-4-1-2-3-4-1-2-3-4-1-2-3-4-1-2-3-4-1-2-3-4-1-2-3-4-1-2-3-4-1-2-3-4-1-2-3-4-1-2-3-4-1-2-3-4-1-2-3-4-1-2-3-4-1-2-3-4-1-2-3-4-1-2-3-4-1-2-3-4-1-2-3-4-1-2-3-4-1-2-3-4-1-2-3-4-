@@ -21,7 +21,7 @@ local Window = Rayfield:CreateWindow({
 		Subtitle = "Key System",
 		Note = "Join the discord server for the key https://discord.com/invite/Af3fQxbgED",
 		FileName = "UniverseUniversal",
-		SaveKey = false,
+		SaveKey = true,
 		GrabKeyFromSite = true,
 		Key = "https://pastebin.com/raw/57uXpGyv"
 	}
