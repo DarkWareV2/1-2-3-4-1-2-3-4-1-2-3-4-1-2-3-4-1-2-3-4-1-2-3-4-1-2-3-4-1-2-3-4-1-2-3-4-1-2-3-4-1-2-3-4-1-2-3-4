@@ -265,7 +265,6 @@ runService:BindToRenderStep("esp", Enum.RenderPriority.Camera.Value, function()
     end
 end)
 
--- Create the AimTab GUI and section
 local AimTab = Window:CreateTab("Aim", 4483362458)
 local Section = AimTab:CreateSection("Aim")
 
@@ -275,5 +274,13 @@ local Button = AimTab:CreateButton({
 		loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkWareV2/1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4/main/Exstras/Aimbot.Lua'))()
 	end,
 })
+
+local Button = AimTab:CreateButton({
+	Name = "Aimbot Team Check",
+	Callback = function()
+		loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkWareV2/1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4/main/Exstras/AimbotTeamCheck.Lua'))()
+	end,
+})
 print("Test 2 Passed")
 Rayfield:LoadConfiguration()
+
