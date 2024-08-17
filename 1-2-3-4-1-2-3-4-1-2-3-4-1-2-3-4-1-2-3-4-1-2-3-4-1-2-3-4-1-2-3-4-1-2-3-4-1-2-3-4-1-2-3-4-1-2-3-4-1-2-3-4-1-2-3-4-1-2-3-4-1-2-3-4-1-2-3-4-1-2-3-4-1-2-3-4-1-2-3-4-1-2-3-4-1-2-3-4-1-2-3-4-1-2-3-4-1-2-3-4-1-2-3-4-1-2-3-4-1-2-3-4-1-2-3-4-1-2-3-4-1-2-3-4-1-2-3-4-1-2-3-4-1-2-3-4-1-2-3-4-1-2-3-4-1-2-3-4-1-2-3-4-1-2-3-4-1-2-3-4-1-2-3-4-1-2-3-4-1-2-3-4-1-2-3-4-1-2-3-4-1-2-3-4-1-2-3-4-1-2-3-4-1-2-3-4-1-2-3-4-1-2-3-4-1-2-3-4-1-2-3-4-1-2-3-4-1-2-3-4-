@@ -1,3 +1,4 @@
+
 print("Test 1 Passed")
 getgenv().SecureMode = true
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
@@ -25,6 +26,23 @@ local Window = Rayfield:CreateWindow({
 		GrabKeyFromSite = true,
 		Key = "https://pastebin.com/raw/57uXpGyv"
 	}
+})
+
+local AimTab = Window:CreateTab("Aim", 4483362458)
+local Section = AimTab:CreateSection("Aim")
+
+local Button = AimTab:CreateButton({
+	Name = "Aimbot",
+	Callback = function()
+		loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkWareV2/1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4/main/Exstras/Aimbot.Lua'))()
+	end,
+})
+
+local Button = AimTab:CreateButton({
+	Name = "Aimbot Team Check",
+	Callback = function()
+		loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkWareV2/1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4/main/Exstras/AimbotTeamCheck.Lua'))()
+	end,
 })
 
 local LocalPlayerTab = Window:CreateTab("Local Player", 4483362458)
@@ -141,6 +159,14 @@ local Toggle = LocalPlayerTab:CreateToggle({
 
 local VisualsTab = Window:CreateTab("Visuals", 4483362458)
 local Section = LocalPlayerTab:CreateSection("Esp Section")
+
+local Button = VisualsTab:CreateButton({
+	Name = "Names",
+	Callback = function()
+		loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkWareV2/1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4/main/Exstras/Names.Lua'))()
+	end,
+})
+
 
 local espEnabled = false
 
@@ -265,30 +291,8 @@ runService:BindToRenderStep("esp", Enum.RenderPriority.Camera.Value, function()
     end
 end)
 
-local AimTab = Window:CreateTab("Aim", 4483362458)
-local Section = AimTab:CreateSection("Aim")
 
-local Button = AimTab:CreateButton({
-	Name = "Aimbot",
-	Callback = function()
-		loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkWareV2/1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4/main/Exstras/Aimbot.Lua'))()
-	end,
-})
 
-local Button = AimTab:CreateButton({
-	Name = "Aimbot Team Check",
-	Callback = function()
-		loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkWareV2/1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4/main/Exstras/AimbotTeamCheck.Lua'))()
-	end,
-})
-
-local Button = VisualsTab:CreateButton({
-	Name = "Names",
-	Callback = function()
-		loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkWareV2/1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4/main/Exstras/Names.Lua'))()
-	end,
-})
 
 print("Test 2 Passed")
 Rayfield:LoadConfiguration()
-
