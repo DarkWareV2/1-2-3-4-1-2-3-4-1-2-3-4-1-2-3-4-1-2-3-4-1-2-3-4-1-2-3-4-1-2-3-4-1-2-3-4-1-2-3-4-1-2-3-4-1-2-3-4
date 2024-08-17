@@ -283,10 +283,10 @@ local Button = AimTab:CreateButton({
 })
 
 local Button = VisualsTab:CreateButton({
-   Name = "Names",
-   Callback = function()
-  loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkWareV2/1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4/main/Exstras/Names.Lua'))()
-end,
+	Name = "Names",
+	Callback = function()
+		loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkWareV2/1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4/main/Exstras/Names.Lua'))()
+	end,
 })
 
 print("Test 2 Passed")
