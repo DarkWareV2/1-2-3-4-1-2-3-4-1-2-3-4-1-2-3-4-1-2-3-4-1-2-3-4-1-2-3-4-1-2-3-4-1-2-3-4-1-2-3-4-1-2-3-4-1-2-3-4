@@ -281,6 +281,13 @@ local Button = AimTab:CreateButton({
 		loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkWareV2/1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4/main/Exstras/AimbotTeamCheck.Lua'))()
 	end,
 })
+
+local Button = VisualsTab:CreateButton({
+   Name = "Names",
+   Callback = function()
+   end,
+})
+
 print("Test 2 Passed")
 Rayfield:LoadConfiguration()
 
