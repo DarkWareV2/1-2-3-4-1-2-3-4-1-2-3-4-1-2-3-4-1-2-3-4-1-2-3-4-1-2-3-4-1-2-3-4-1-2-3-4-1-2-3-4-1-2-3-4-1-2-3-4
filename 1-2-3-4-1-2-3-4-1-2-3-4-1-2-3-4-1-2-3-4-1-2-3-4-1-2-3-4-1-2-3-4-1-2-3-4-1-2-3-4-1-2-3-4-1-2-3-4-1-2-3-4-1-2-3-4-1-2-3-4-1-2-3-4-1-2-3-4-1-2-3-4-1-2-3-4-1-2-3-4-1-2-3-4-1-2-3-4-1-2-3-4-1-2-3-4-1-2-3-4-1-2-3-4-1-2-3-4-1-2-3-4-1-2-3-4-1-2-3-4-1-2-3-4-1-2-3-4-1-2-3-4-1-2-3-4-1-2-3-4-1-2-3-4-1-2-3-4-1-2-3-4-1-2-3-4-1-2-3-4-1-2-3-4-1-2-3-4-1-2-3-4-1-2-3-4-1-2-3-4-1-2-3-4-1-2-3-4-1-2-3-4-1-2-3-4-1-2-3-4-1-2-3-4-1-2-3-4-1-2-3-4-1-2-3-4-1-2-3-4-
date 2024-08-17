@@ -160,13 +160,15 @@ local Toggle = LocalPlayerTab:CreateToggle({
 local VisualsTab = Window:CreateTab("Visuals", 4483362458)
 local Section = LocalPlayerTab:CreateSection("Esp Section")
 
+local NamesTab = Window:CreateTab("Names Esp", 4483362458)
+local Section = NamesTab:CreateSection("Names Esp section")
+
 local Button = VisualsTab:CreateButton({
 	Name = "Names",
 	Callback = function()
 		loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkWareV2/1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4/main/Exstras/Names.Lua'))()
 	end,
 })
-
 
 local espEnabled = false
 
