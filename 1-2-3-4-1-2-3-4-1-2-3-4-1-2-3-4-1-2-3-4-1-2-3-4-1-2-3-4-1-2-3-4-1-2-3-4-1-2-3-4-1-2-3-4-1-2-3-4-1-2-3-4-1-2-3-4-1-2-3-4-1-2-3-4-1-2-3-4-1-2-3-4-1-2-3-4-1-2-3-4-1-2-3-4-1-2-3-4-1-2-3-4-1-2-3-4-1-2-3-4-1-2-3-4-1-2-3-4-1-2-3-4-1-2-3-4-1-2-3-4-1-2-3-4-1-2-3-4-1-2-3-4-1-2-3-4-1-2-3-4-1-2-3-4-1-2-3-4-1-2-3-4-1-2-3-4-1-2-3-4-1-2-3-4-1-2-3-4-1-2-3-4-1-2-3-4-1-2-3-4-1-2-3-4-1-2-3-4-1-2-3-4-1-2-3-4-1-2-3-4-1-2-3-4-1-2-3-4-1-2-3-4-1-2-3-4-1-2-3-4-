@@ -3,7 +3,7 @@ print("Test 1 Passed")
 getgenv().SecureMode = true
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local Window = Rayfield:CreateWindow({
-	Name = "Universe Universal only for cats like mr pi something",
+	Name = "Universe Universal",
 	LoadingTitle = "Loading in progress...",
 	LoadingSubtitle = "Scripted By Fire OfficialDC Tested By Mi_aio and dreamurrd",
 	ConfigurationSaving = {
