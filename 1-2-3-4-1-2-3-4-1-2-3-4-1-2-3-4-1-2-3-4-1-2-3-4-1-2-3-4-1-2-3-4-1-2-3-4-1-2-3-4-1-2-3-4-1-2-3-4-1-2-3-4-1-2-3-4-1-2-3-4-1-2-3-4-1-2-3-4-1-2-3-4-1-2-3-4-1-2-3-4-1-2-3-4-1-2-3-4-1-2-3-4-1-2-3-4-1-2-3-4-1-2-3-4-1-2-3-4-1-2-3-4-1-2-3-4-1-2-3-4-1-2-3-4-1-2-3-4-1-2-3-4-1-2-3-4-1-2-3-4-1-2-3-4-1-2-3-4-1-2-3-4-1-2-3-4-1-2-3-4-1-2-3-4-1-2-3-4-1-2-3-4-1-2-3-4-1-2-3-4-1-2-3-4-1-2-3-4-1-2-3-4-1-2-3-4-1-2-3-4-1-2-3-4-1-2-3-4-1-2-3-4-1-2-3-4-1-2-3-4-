@@ -160,14 +160,7 @@ local Toggle = LocalPlayerTab:CreateToggle({
 local VisualsTab = Window:CreateTab("Visuals", 4483362458)
 local Section = LocalPlayerTab:CreateSection("Esp Section")
 
-local ATab = Window:CreateTab("Arsenal Misc", 4483362458)
-local Section = ATab:CreateSection("Gun Config")
 
-local Button = AlTab:CreateButton({
-   Name = "Infinite ammo",
-   Callback = function()
-   end,
-})
 
 local names = false
 local Holder
