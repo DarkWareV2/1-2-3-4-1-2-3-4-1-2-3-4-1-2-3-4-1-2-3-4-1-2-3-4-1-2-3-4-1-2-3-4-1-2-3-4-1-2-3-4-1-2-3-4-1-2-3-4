@@ -166,14 +166,12 @@ local Section = NamesTab:CreateSection("Gun Config")
 local Button = ArsenalTab:CreateButton({
    Name = "Infinite ammo",
    Callback = function()
- loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkWareV2/1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4-1-2-3-4/main/Exstras/Arsenal%20INF%20Ammo.Lua'))()
    end,
 })
 
 local names = false
 local Holder
 
--- Function to initialize ESP system
 local function initializeESP()
     _G.FriendColor = Color3.fromRGB(0, 0, 255)
     _G.EnemyColor = Color3.fromRGB(255, 0, 0)
