@@ -12,7 +12,7 @@ local Window = Rayfield:CreateWindow({
 		FileName = "Universe Universal"
 	},
         Discord = {
-        	Enabled = true,
+        	Enabled = false,
         	Invite = "https://discord.com/invite/Af3fQxbgED",
         	RememberJoins = true
         },
